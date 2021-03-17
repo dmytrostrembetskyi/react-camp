@@ -1,10 +1,11 @@
 import http from 'axios';
 
-export async function getPublicTasks() {
-    const response = await http.get('tasks/allowanonymous');
-    //const response = await (await fetch('https://wave-api.azurewebsites.net/api/tasks/allowanonymous')).json();
+export async function getPublicTasks({ page, pageSize, containsTitle }) {
+    const response = await http.get('tasks/allowanonymous', {
+        params: { page, perPage: pageSize, containsTitle }
+    });
 
-    console.log(response);
+    if (response.status === 200) return response.data;
 
-    return [];
+    throw response;
 }
