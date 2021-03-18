@@ -3,8 +3,8 @@ import React, { useContext } from 'react'
 import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
-// import { useHistory } from "react-router";
-// import { UserContext } from './auth/UserContext';
+import { useHistory } from "react-router";
+import { UserContext } from './auth/UserContext';
 
 const drawerWidth = 240;
 
@@ -40,22 +40,14 @@ const useStyles = makeStyles((theme) => ({
 
 export const TopAppBar = ({ open, handleDrawerOpen }) => {
     const classes = useStyles();
-    // const history = useHistory();
+    const history = useHistory();
 
-    // const { user, logoutUser } = useContext(UserContext);
-    // const auth = user.result;
+    const { user, logoutUser, isAuth } = useContext(UserContext);
 
-    // const onLogout = () => {
-    //     logoutUser();
-    //     history.push('/');
-    // }
-
-    // const loginLogoutContent = auth ?
-    //     <div className={classes.rightButton}>
-    //         ({user.fullName})
-    //         <Button onClick={onLogout} color="inherit">Logout</Button>
-    //     </div> :
-    //     <Button className={classes.rightButton} component={Link} to="/login" color="inherit">Login</Button>;
+    const onLogout = () => {
+        logoutUser();
+        history.push('/');
+    }
 
     return (
         <div className={classes.root}>
@@ -76,7 +68,12 @@ export const TopAppBar = ({ open, handleDrawerOpen }) => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>Boot Wave</Typography>
-                    {/* {loginLogoutContent} */}
+                    {isAuth() ?
+                        <div className={classes.rightButton}>
+                            ({user.fullName})
+                        <Button onClick={onLogout} color="inherit">Logout</Button>
+                        </div> :
+                        <Button className={classes.rightButton} component={Link} to="/login" color="inherit">Login</Button>}
                 </Toolbar>
             </AppBar>
         </div>
