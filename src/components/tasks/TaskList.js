@@ -1,9 +1,10 @@
-import { Button, Card, CardContent, Grid, makeStyles, TextField } from "@material-ui/core";
+import { Button, Card, CardActions, CardContent, Grid, makeStyles, TextField } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getPublicTasks } from "../../api/TasksApi";
 import { Link } from 'react-router-dom';
+import { getTaskTypeLabel } from "../../constants/TaskTypes";
 
 const useStyles = makeStyles({
     card: {
@@ -33,20 +34,37 @@ export default function TaskList() {
     }, [page, pageSize, containsTitle])
 
     return (
-        <>
+        <div>
             <Grid container direction="row" justify="space-between" alignItems="baseline">
                 <Button component={Link} to="/tasks/create" variant="contained" color="primary">Create</Button>
-                <TextField size="small" label="search by title" variant="outlined" onChange={e => setContainsTitle(e.target.value)}></TextField>
-                <Pagination page={page} count={Math.ceil(count / pageSize)} onChange={handlePageChange}></Pagination>
+                <TextField size="small" label="search title" variant="outlined" onChange={e => setContainsTitle(e.target.value)} />
+                <Pagination count={Math.ceil(count / pageSize)} page={page} onChange={handlePageChange} />
             </Grid>
             {taskList.map((task) =>
                 <div key={task.id}>
                     <Card className={classes.card}>
                         <CardContent>
-                            {task.title}
+
+                            <Grid container spacing={3}>
+                                <Grid item xs={6}> <strong>{task.title}</strong></Grid>
+                                <Grid item xs={6}> {getTaskTypeLabel(task.type)} </Grid>
+                            </Grid>
+
+                            {
+                                task.description ?
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12}> {task.description} </Grid>
+                                    </Grid>
+                                    : ''
+                            }
+
                         </CardContent>
+                        <CardActions>
+                            <Button component={Link} to={`/tasks/${task.id}/edit`} variant="outlined" color="primary" size="small">Edit</Button>
+                            <Button variant="outlined" color="secondary" size="small">Delete</Button>
+                        </CardActions>
                     </Card>
                 </div>)}
-        </>
+        </div>
     );
 }

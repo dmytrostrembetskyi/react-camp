@@ -7,13 +7,14 @@ import { BrowserRouter } from 'react-router-dom';
 import { UserProvider } from './components/auth/UserProvider';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <UserProvider>
-        <App />
-      </UserProvider>
-    </BrowserRouter>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <BrowserRouter>
+    <UserProvider>
+      <App />
+    </UserProvider>
+  </BrowserRouter>
+  // </React.StrictMode>
+  ,
   document.getElementById('root')
 );
 
