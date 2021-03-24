@@ -1,7 +1,10 @@
-import { Button, Card, CardContent, makeStyles, MenuItem, TextField, Typography } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { Button, Card, CardContent, Grid, makeStyles, MenuItem, TextField, Typography } from "@material-ui/core";
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router";
 import { getTask, updateTask } from "../../api/TasksApi";
 import { taskTypes } from "../../constants/TaskTypes";
+import { SnackbarContext } from "../shared/snackbar/SnackbarContext";
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
     textField: {
@@ -13,27 +16,30 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function EditTask() {
-
-
+    const params = useParams();
+    const taskId = params.id;
     const classes = useStyles();
     const [name, setName] = useState('');
     const [type, setType] = useState('task');
     const [description, setDescription] = useState('');
+    const { showErrors, showSuccess } = useContext(SnackbarContext);
 
     async function handleSubmit(e) {
         e.preventDefault();
 
         try {
-            await updateTask({ name, description, type });
+            await updateTask({ id: taskId, name, description, type });
+            showSuccess();
         } catch (error) {
-            console.log('handled errors', error.response);
+
+            showErrors(error.response);
         }
     }
 
     useEffect(() => {
 
         (async () => {
-            let task = await getTask(1); //TODO: change id
+            let task = await getTask(taskId);
 
             if (task) {
                 setName(task.title);
@@ -80,9 +86,14 @@ export default function EditTask() {
                     </div>
 
                     <div>
-                        <Button type='submit' variant='contained' color='primary'>
-                            Update
-                    </Button>
+                        <Grid container justify="space-between">
+                            <Button type='submit' variant='contained' color='primary'>
+                                Update
+                            </Button>
+                            <Button component={Link} to={'/tasks'} variant='outlined' color='primary'>
+                                Cancel
+                            </Button>
+                        </Grid>
                     </div>
                 </form>
             </CardContent>

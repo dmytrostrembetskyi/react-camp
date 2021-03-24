@@ -2,9 +2,10 @@ import { Button, Card, CardActions, CardContent, Grid, makeStyles, TextField } f
 import { Pagination } from "@material-ui/lab";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getPublicTasks } from "../../api/TasksApi";
+import { deleteTask, getPublicTasks } from "../../api/TasksApi";
 import { Link } from 'react-router-dom';
 import { getTaskTypeLabel } from "../../constants/TaskTypes";
+import ConfirmDialog from "../shared/dialog/ConfirmDialog";
 
 const useStyles = makeStyles({
     card: {
@@ -19,6 +20,8 @@ export default function TaskList() {
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
     const [containsTitle, setContainsTitle] = useState('');
+    const [state, setState] = useState(0);
+    const forceUpdate = () => setState(state + 1);
 
     const handlePageChange = (event, value) => {
         console.log(event);
@@ -31,7 +34,12 @@ export default function TaskList() {
             setTaskList(result.items);
             setCount(result.count);
         })()
-    }, [page, pageSize, containsTitle])
+    }, [page, pageSize, containsTitle, state])
+
+    const handleDeleteTask = async (event, value) => {
+        await deleteTask(value);
+        forceUpdate();
+    }
 
     return (
         <div>
@@ -61,7 +69,9 @@ export default function TaskList() {
                         </CardContent>
                         <CardActions>
                             <Button component={Link} to={`/tasks/${task.id}/edit`} variant="outlined" color="primary" size="small">Edit</Button>
-                            <Button variant="outlined" color="secondary" size="small">Delete</Button>
+                            <ConfirmDialog buttonName="Delete" buttonColor="secondary" questionText="Do you agree to delete task?"
+                                onAgreeAction={(e) => handleDeleteTask(e, task.id)}
+                            ></ConfirmDialog>
                         </CardActions>
                     </Card>
                 </div>)}

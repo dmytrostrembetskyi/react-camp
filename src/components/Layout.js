@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { Container } from '@material-ui/core';
 import { TopAppBar } from './TopAppBar';
 import SideDrawer from './SideDrawer';
+import { SnackbarProvider } from './shared/snackbar/SnackbarProvider';
 
 const drawerWidth = 240;
 
@@ -59,7 +60,9 @@ function Layout(props) {
             >
                 <div className={classes.drawerHeader} />
                 <Container>
-                    {props.children}
+                    <SnackbarProvider>
+                        {props.children}
+                    </SnackbarProvider>
                 </Container>
             </main>
         </div >

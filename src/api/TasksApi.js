@@ -1,7 +1,7 @@
 import http from 'axios';
 
 export async function getPublicTasks({ page, pageSize, containsTitle }) {
-    const response = await http.get('tasks/allowanonymous', {
+    const response = await http.get('tasks', { //allowanonymous
         params: { page, perPage: pageSize, containsTitle }
     });
 
@@ -26,8 +26,8 @@ export async function createTask({ name, description, type }) {
     throw response;
 }
 
-export async function updateTask({ id, name, description, type, status }) {
-    const response = await http.put('tasks', { id, title: name, description, type, status });
+export async function updateTask({ id, name, description, type }) {
+    const response = await http.put('tasks', { id, title: name, description, type });
 
     if (response.status >= 200 && response.status < 300) return response.data;
 
