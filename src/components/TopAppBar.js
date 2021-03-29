@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { useHistory } from "react-router";
 import { UserContext } from './auth/UserContext';
+import LastTasks from './tasks/LastTasks';
 
 const drawerWidth = 240;
 
@@ -70,6 +71,7 @@ export const TopAppBar = ({ open, handleDrawerOpen }) => {
                     <Typography variant="h6" noWrap>Boot Wave</Typography>
                     {isAuth() ?
                         <div className={classes.rightButton}>
+                            <LastTasks />
                             ({user.fullName})
                         <Button onClick={onLogout} color="inherit">Logout</Button>
                         </div> :
